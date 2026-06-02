@@ -31,8 +31,15 @@ for i in range(N):
     # TODO: complete the objective function (i.e. potential energy) HERE
     Vchain += m * g0 * z[i]
     if i > 0 and i < N - 1:
-        opti.subject_to(z[i] >= 0.5)
-        opti.subject_to(z[i] - 0.1 * y[i] >= 0.5)
+        #Ex -1 Q1
+        # opti.subject_to(z[i] >= 0.5)
+        #Ex -1 Q2
+        # opti.subject_to(z[i] - 0.1 * y[i] >= 0.5)
+        #Ex - 2 Q1
+        # opti.subject_to(z[i] + 0.2 -0.1 * y[i]**2 >= 0)
+        #Ex - 2 Q2
+        opti.subject_to(z[i] + y[i]**2 >= 0)
+
     if i != N - 1:
         Vchain += 0.5 * Di * ((y[i + 1] - y[i]) ** 2 + (z[i + 1] - z[i]) ** 2)
 
@@ -48,6 +55,10 @@ opti.subject_to(z[-1] == 1)
 # Setting solver to ipopt and solving the problem:
 opti.solver("ipopt")
 # opti.solver('sqpmethod')
+
+#Set an initial Guess
+opti.set_initial(y, -1)
+
 sol = opti.solve()
 
 # get solution and plot results
